@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Stack } from "@mui/material";
 import { alpha } from '@mui/material/styles';
 import SideMenu from "../../components/SideMenu";

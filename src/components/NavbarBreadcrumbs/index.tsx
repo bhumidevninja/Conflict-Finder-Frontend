@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Breadcrumbs, { breadcrumbsClasses } from '@mui/material/Breadcrumbs';
@@ -8,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   [`& .${breadcrumbsClasses.separator}`]: {
-    color: (theme.vars || theme).palette.action.disabled,
+    color: theme?.vars?.palette?.action?.disabled ?? 'defaultColor', // Provide a default color
     margin: 1,
   },
   [`& .${breadcrumbsClasses.ol}`]: {

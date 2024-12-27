@@ -1,13 +1,12 @@
-import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import CustomizedDataGrid from '../CustomizedDataGrid';
-import StatCard, { StatCardProps } from '../StatCard';
+import StatCard from '../StatCard';
 
 const data: any[] = [
   {
-    title: 'Users',
+    title: 'Approved Request Count',
     value: '14k',
     interval: 'Last 30 days',
     trend: 'up',
@@ -17,7 +16,7 @@ const data: any[] = [
     ],
   },
   {
-    title: 'Conversions',
+    title: 'Rejected Request Count',
     value: '325',
     interval: 'Last 30 days',
     trend: 'down',
@@ -27,7 +26,7 @@ const data: any[] = [
     ],
   },
   {
-    title: 'Event count',
+    title: 'Total Request Count',
     value: '200k',
     interval: 'Last 30 days',
     trend: 'neutral',
@@ -51,7 +50,7 @@ export default function MainGrid() {
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
         {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+          <Grid key={index} size={{ xs: 12, sm: 6, lg: 4, xl:4}}>
             <StatCard {...card} />
           </Grid>
         ))}
@@ -60,7 +59,7 @@ export default function MainGrid() {
         Recent Activity
       </Typography>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
+        <Grid size={{ xs: 12, lg: 9, xl:12 }}>
           <CustomizedDataGrid />
         </Grid>
       </Grid>

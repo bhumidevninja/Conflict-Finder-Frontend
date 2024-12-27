@@ -1,8 +1,6 @@
-import { useState } from "react";
 import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MainGrid from "./components/MainGrid";
@@ -23,7 +21,7 @@ const PrivateRoute = ({ children }: { children: any }) => {
   );
 };
 
-const PublicRoute = ({ children }) => {
+const PublicRoute = ({ children }:{children:any}) => {
   // const isAuthenticated = localStorage.getItem("auth") === "true";
   // return isAuthenticated ? <Navigate to="/dashboard" /> : children;
   return <PublicLayout>{children}</PublicLayout>;

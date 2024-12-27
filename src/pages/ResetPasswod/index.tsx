@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { FormEvent } from "react";
 import {
   Box,
   Button,
@@ -6,71 +6,34 @@ import {
   TextField,
   Typography,
   CssBaseline,
-  FormLabel,
 } from "@mui/material";
 
-interface Passwords {
-  password: string;
-  confirmPassword: string;
-}
 
 const ResetPasswordForm: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
-  const [emailError, setEmailError] = useState<string>("");
-  const [passwords, setPasswords] = useState<Passwords>({
-    password: "",
-    confirmPassword: "",
-  });
-  const [passwordErrors, setPasswordErrors] = useState<Passwords>({
-    password: "",
-    confirmPassword: "",
-  });
-
-  const handleEmailSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (/\S+@\S+\.\S+/.test(email)) {
-      setEmailError(""); // Valid email
-    } else {
-      setEmailError("Please enter a valid email address.");
-    }
-  };
 
   const handlePasswordSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { password, confirmPassword } = passwords;
+  //   const { password, confirmPassword } = passwords;
 
-    const errors: Passwords = {
-      password:
-        password.length >= 8
-          ? ""
-          : "Password must be at least 8 characters long.",
-      confirmPassword:
-        password === confirmPassword ? "" : "Passwords do not match.",
-    };
+  //   const errors: Passwords = {
+  //     password:
+  //       password.length >= 8
+  //         ? ""
+  //         : "Password must be at least 8 characters long.",
+  //     confirmPassword:
+  //       password === confirmPassword ? "" : "Passwords do not match.",
+  //   };
 
-    setPasswordErrors(errors);
+  //   setPasswordErrors(errors);
 
-    if (Object.values(errors).every((error) => error === "")) {
-      alert("Password reset successfully!");
-      console.log("Email:", email);
-      console.log("Passwords:", passwords);
-    }
+  //   if (Object.values(errors).every((error) => error === "")) {
+  //     alert("Password reset successfully!");
+  //     console.log("Email:", email);
+  //     console.log("Passwords:", passwords);
+  //   }
   };
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-
-    if (name === "email") {
-      setEmail(value);
-    } else {
-      setPasswords({
-        ...passwords,
-        [name]: value,
-      });
-    }
-  };
+  
 
   return (
     <React.Fragment>
@@ -133,7 +96,7 @@ const ResetPasswordForm: React.FC = () => {
             </Typography>
             <Box
               component="form"
-              onSubmit={(e) => handleInputChange(e)}
+              onSubmit={(e) => handlePasswordSubmit(e)}
               noValidate
               sx={{
                 display: "flex",

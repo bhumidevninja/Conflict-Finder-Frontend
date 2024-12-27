@@ -8,10 +8,12 @@ import {
   TextField,
   Tooltip,
   Typography,
-  Container,
+  Snackbar,
 } from "@mui/material";
 
 const FormDetail: React.FC = () => {
+  const [open, setOpen] = useState(false);
+
   const [formValues, setFormValues] = useState({
     projectTitle: "",
     projectFrontend: "",
@@ -30,10 +32,21 @@ const FormDetail: React.FC = () => {
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
 
-    // Clear error on change
     if (formErrors[name as keyof typeof formErrors]) {
       setFormErrors({ ...formErrors, [name]: "" });
     }
+  };
+
+
+  const handleClose = (
+    // event?: React.SyntheticEvent | Event,
+    // reason?: SnackbarCloseReason,
+  ) => {
+    // if (reason === 'clickaway') {
+    //   return;
+    // }
+
+    setOpen(false);
   };
 
   const validateForm = () => {
@@ -62,6 +75,7 @@ const FormDetail: React.FC = () => {
   };
 
   const handleSubmit = (event: React.FormEvent) => {
+    setOpen(true)
     event.preventDefault();
     if (validateForm()) {
       setFormValues({
@@ -74,7 +88,7 @@ const FormDetail: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="xl">
+    <div>
       <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
         Create New Project
       </Typography>
@@ -157,7 +171,7 @@ const FormDetail: React.FC = () => {
                         fullWidth
                         label="Project Details"
                         name="projectDetails"
-                        placeholder="Describe the purpose and features of the project..."
+                        placeholder="Describe the purpose and features of the project"
                         multiline
                         rows={16}
                         value={formValues.projectDetails}
@@ -188,6 +202,13 @@ const FormDetail: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
+          <Snackbar
+            open={open}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            autoHideDuration={5000}
+            onClose={handleClose}
+            message="Your details have been submitted successfully."
+          />
         </Box>
 
         <Box flex={1}>
@@ -206,8 +227,8 @@ const FormDetail: React.FC = () => {
                     rows={16}
                     value={formValues.projectDetails}
                     onChange={handleInputChange}
-                    error={!!formErrors.projectDetails}
-                    helperText={formErrors.projectDetails}
+                    // error={!!formErrors.projectDetails}
+                    // helperText={formErrors.projectDetails}
                     size="small"
                   />
                 </Tooltip>
@@ -231,7 +252,7 @@ const FormDetail: React.FC = () => {
           </Card>
         </Box>
       </Box>
-    </Container>
+    </div>
   );
 };
 

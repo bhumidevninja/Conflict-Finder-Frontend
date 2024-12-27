@@ -14,11 +14,23 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
+type selectedRowType = {
+  Name: string;
+  batchYear: number;
+  projectName: string;
+  status: string;
+};
+
 const CustomizedDataGrid = () => {
   const [openModal, setOpenModal] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState(null);
+  const [selectedRow, setSelectedRow] = React.useState<selectedRowType>({
+    Name: "",
+    batchYear: 2000,
+    projectName: "",
+    status: "",
+  });
 
-  const handleRowClick = (param) => {
+  const handleRowClick = (param: any) => {
     setSelectedRow(param.row);
     setOpenModal(true);
   };
