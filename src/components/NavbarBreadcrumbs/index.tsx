@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   [`& .${breadcrumbsClasses.separator}`]: {
-    color: theme?.vars?.palette?.action?.disabled ?? 'defaultColor', // Provide a default color
+    color: theme?.customVars?.palette?.action?.disabled ?? 'defaultColor', // Provide a default color
     margin: 1,
   },
   [`& .${breadcrumbsClasses.ol}`]: {

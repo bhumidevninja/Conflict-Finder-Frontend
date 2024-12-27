@@ -2,7 +2,7 @@ import { createTheme } from "@mui/material";
 
 declare module "@mui/material/styles" {
   interface Theme {
-    vars: {
+    customVars: {
       palette: {
         action: {
           disabled: string;
@@ -15,7 +15,7 @@ declare module "@mui/material/styles" {
   }
 
   interface ThemeOptions {
-    vars?: {
+    customVars?: {
       palette?: {
         action?: {
           disabled: string;
@@ -60,7 +60,7 @@ const theme = createTheme({
     },
   },
   cssVariables: true,
-  vars: {
+  customVars: {
     palette: {
       action: {
         disabled: "#9e9e9e",
