@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
+
+import RegisterSVG from "../../components/svg/register";
+import LogoSVG from "../../components/svg/logo";
 
 const Register = () => {
   const [emailError, setEmailError] = useState(false);
@@ -28,7 +30,6 @@ const Register = () => {
       password: data.get("password"),
       fullname: data.get("fullname"),
     });
-
   };
 
   const validateInputs = () => {
@@ -70,28 +71,48 @@ const Register = () => {
 
   return (
     <React.Fragment>
-      <CssBaseline enableColorScheme />
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "row",
+          display: "grid",
+          gridTemplateRows: "auto 1fr",
+          gridTemplateColumns: "1fr 1fr",
           height: "100vh",
         }}
       >
         <Box
+          component="a"
+          href="/login"
           sx={{
-            flex: 1,
-            backgroundImage: `url("https://png.pngtree.com/png-clipart/20230920/original/pngtree-people-team-working-on-computer-together-look-student-drawing-vector-png-image_12700079.png")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            gridColumn: "1 / 2",
+            gridRow: "1 / 2",
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "left",
+            cursor: "pointer",
+            textDecoration: "none",
           }}
-        />
+        >
+          <LogoSVG />
+        </Box>
 
         <Box
           sx={{
-            flex: 1,
+            gridColumn: "1 / 2",
+            gridRow: "2 / 3",
             display: "flex",
-            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "hidden",
+          }}
+        >
+          <RegisterSVG />
+        </Box>
+
+        <Box
+          sx={{
+            gridColumn: "2 / 3",
+            gridRow: "2 / 3",
+            display: "flex",
             justifyContent: "center",
             alignItems: "center",
             padding: "2rem",
@@ -103,35 +124,16 @@ const Register = () => {
               maxWidth: "400px",
             }}
           >
-            <Box
-              component="a"
-              href="/login"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-            >
-              <img
-                src="https://img.icons8.com/pulsar-gradient/48/project.png"
-                alt="Link Image"
-                style={{
-                  objectFit: "cover",
-                  borderRadius: 4,
-                }}
-              />
-            </Box>
             <Typography
               component="h1"
               variant="h4"
               sx={{
                 marginBottom: "1rem",
                 fontSize: "clamp(2rem, 10vw, 2.15rem)",
+                textAlign: "center"
               }}
             >
-              SIGN UP
+              Sign up
             </Typography>
             <Box
               component="form"
@@ -144,10 +146,7 @@ const Register = () => {
               }}
             >
               <FormControl>
-                <FormLabel
-                  htmlFor="email"
-                  error={emailErrorMessage ? true : false}
-                >
+                <FormLabel htmlFor="email" error={Boolean(emailErrorMessage)}>
                   Email
                 </FormLabel>
                 <TextField
@@ -159,14 +158,14 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  error={emailErrorMessage ? true : false}
+                  error={Boolean(emailErrorMessage)}
                 />
               </FormControl>
 
               <FormControl>
                 <FormLabel
                   htmlFor="fullname"
-                  error={fullNameErrorMessage ? true : false}
+                  error={Boolean(fullNameErrorMessage)}
                 >
                   Full Name
                 </FormLabel>
@@ -179,14 +178,14 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  error={fullNameErrorMessage ? true : false}
+                  error={Boolean(fullNameErrorMessage)}
                 />
               </FormControl>
 
               <FormControl>
                 <FormLabel
                   htmlFor="password"
-                  error={passwordErrorMessage ? true : false}
+                  error={Boolean(passwordErrorMessage)}
                 >
                   Password
                 </FormLabel>
@@ -199,7 +198,7 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  error={passwordErrorMessage ? true : false}
+                  error={Boolean(passwordErrorMessage)}
                 />
               </FormControl>
 
@@ -219,7 +218,7 @@ const Register = () => {
                 </Typography>
               </Button>
               <div style={{ textAlign: "center" }}>
-                Already having account?
+                Already having account?{" "}
                 <Link
                   component={RouterLink}
                   to="/login"
@@ -229,7 +228,7 @@ const Register = () => {
                     textDecoration: "none",
                   }}
                 >
-                  click here
+                  Click here
                 </Link>
               </div>
             </Box>

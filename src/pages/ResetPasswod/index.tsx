@@ -1,4 +1,4 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   Box,
   Button,
@@ -7,33 +7,29 @@ import {
   Typography,
   CssBaseline,
 } from "@mui/material";
-
+import FogotPasswordSVG from "../../components/svg/forgotPassword";
+import LogoSVG from "../../components/svg/logo";
 
 const ResetPasswordForm: React.FC = () => {
 
-  const handlePasswordSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  //   const { password, confirmPassword } = passwords;
-
-  //   const errors: Passwords = {
-  //     password:
-  //       password.length >= 8
-  //         ? ""
-  //         : "Password must be at least 8 characters long.",
-  //     confirmPassword:
-  //       password === confirmPassword ? "" : "Passwords do not match.",
-  //   };
-
-  //   setPasswordErrors(errors);
-
-  //   if (Object.values(errors).every((error) => error === "")) {
-  //     alert("Password reset successfully!");
-  //     console.log("Email:", email);
-  //     console.log("Passwords:", passwords);
-  //   }
-  };
-
   
+  const [emailErrorMessage, setEmailErrorsMessage] = useState<string|null>(null);
+
+  const handleEmailSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let isValid = false;
+    const email = document.getElementById("email") as HTMLInputElement;
+    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
+      setEmailErrorsMessage("Please enter a valid email address.");
+      isValid = false;
+    } else {
+      setEmailErrorsMessage(null);
+      isValid = true;
+    }
+    return isValid;
+
+  };
 
   return (
     <React.Fragment>
@@ -46,6 +42,23 @@ const ResetPasswordForm: React.FC = () => {
           width: "100vw",
         }}
       >
+        <Box
+          component="a"
+          href="/login"
+          sx={{
+            gridColumn: "1 / 2",
+            gridRow: "1 / 2",
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "left",
+            cursor: "pointer",
+            textDecoration: "none",
+            padding: "1rem",
+          }}
+        >
+          <LogoSVG />
+        </Box>
+        <FogotPasswordSVG />
         <Box
           sx={{
             flex: 1,
@@ -63,40 +76,20 @@ const ResetPasswordForm: React.FC = () => {
               textAlign: "center",
             }}
           >
-            <Box
-              component="a"
-              href="/login"
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                cursor: "pointer",
-                textDecoration: "none",
-              }}
-            >
-              <img
-                src="https://img.icons8.com/pulsar-gradient/48/project.png"
-                alt="Link Image"
-                style={{
-                  objectFit: "cover",
-                  borderRadius: 4,
-                }}
-              />
-            </Box>
             <Typography
               component="h1"
               variant="h4"
               sx={{
-                marginBottom: "1rem",
+                marginBottom: "2rem",
                 fontSize: "clamp(2rem, 10vw, 2.15rem)",
-                textAlign: "left",
+                textAlign: "center",
               }}
             >
               Forgot Password
             </Typography>
             <Box
               component="form"
-              onSubmit={(e) => handlePasswordSubmit(e)}
+              onSubmit={(e) => handleEmailSubmit(e)}
               noValidate
               sx={{
                 display: "flex",
@@ -115,6 +108,8 @@ const ResetPasswordForm: React.FC = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
+                  helperText={emailErrorMessage}
+                  error={Boolean(emailErrorMessage)}
                 />
               </FormControl>
 
@@ -129,21 +124,12 @@ const ResetPasswordForm: React.FC = () => {
                 }}
               >
                 <Typography variant="button" fontWeight="bold">
-                  Click to Sent Mail
+                  Click to Send Mail
                 </Typography>
               </Button>
             </Box>
           </Box>
         </Box>
-
-        <Box
-          sx={{
-            flex: 1,
-            backgroundImage: `url("https://img.freepik.com/premium-vector/forgot-password-concept-isolated-white_263070-194.jpg")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
       </Box>
     </React.Fragment>
   );

@@ -1,6 +1,6 @@
 import "./App.css";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MainGrid from "./components/MainGrid";
@@ -22,8 +22,8 @@ const PrivateRoute = ({ children }: { children: any }) => {
 };
 
 const PublicRoute = ({ children }:{children:any}) => {
-  // const isAuthenticated = localStorage.getItem("auth") === "true";
-  // return isAuthenticated ? <Navigate to="/dashboard" /> : children;
+  const isAuthenticated = localStorage.getItem("auth") === "true";
+  return isAuthenticated ? <Navigate to="/dashboard" /> : children;
   return <PublicLayout>{children}</PublicLayout>;
 };
 
@@ -46,6 +46,13 @@ function App() {
               <PublicRoute>
                 <Register />
               </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/"
+            element={
+              <Navigate to="/dashboard" replace />
             }
           />
 

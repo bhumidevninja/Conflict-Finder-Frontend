@@ -8,13 +8,15 @@ import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router-dom";
+import LoginSVG from "../../components/svg/login";
+import LogoSVG from "../../components/svg/logo";
 
 const Login = () => {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     if (emailError || passwordError) {
       event.preventDefault();
@@ -66,6 +68,25 @@ const Login = () => {
         }}
       >
         <Box
+          component="a"
+          href="/login"
+          sx={{
+            gridColumn: "1 / 2",
+            gridRow: "1 / 2",
+            display: "flex",
+            justifyContent: "left",
+            alignItems: "left",
+            cursor: "pointer",
+            textDecoration: "none",
+          }}
+        >
+          <LogoSVG />
+        </Box>
+        
+
+        
+        <LoginSVG />
+        <Box
           sx={{
             flex: 1,
             display: "flex",
@@ -75,10 +96,6 @@ const Login = () => {
             padding: "2rem",
           }}
         >
-          <img
-            src="https://img.icons8.com/pulsar-gradient/48/project.png"
-            alt="logo"
-          />
           <Box
             sx={{
               width: "100%",
@@ -138,7 +155,7 @@ const Login = () => {
                   helperText={passwordErrorMessage}
                 />
                 <div style={{ textAlign: "right", fontSize: "12px" }}>
-                  Forgot Password?
+                  Forgot Password?&nbsp;
                   <Link
                     component={RouterLink}
                     to="/forgot-password"
@@ -171,7 +188,7 @@ const Login = () => {
               </Button>
 
               <div style={{ textAlign: "center" }}>
-                Don't have account?
+                Don't have account?&nbsp;
                 <Link
                   component={RouterLink}
                   to="/register"
@@ -188,15 +205,6 @@ const Login = () => {
             </Box>
           </Box>
         </Box>
-
-        <Box
-          sx={{
-            flex: 1,
-            backgroundImage: `url("https://png.pngtree.com/png-clipart/20221021/original/pngtree-diverse-people-working-on-computer-together-solving-business-problem-png-image_8709874.png")`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
       </Box>
     </React.Fragment>
   );

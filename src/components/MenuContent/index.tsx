@@ -4,7 +4,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
@@ -16,17 +16,34 @@ const mainListItems = [
   { text: "Project", icon: <AnalyticsRoundedIcon />, link: "/project" },
 ];
 
-const secondaryListItems = [
-  { text: "Account", icon: <SettingsRoundedIcon /> },
-  { text: "Logout", icon: <LogoutIcon /> },
-];
+
+
 
 const MenuContent = () => {
+  const navigate = useNavigate();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
 
   const handleListItemClick = (index: number) => {
     setSelectedIndex(index);
   };
+
+  const handleAction = (text:string) => {
+    if(text === "Account"){
+      navigate('/account')
+    }
+
+    if(text === "Logout"){
+      localStorage.clear();
+      navigate('/login')
+    }
+  }
+
+  const secondaryListItems = [
+    { text: "Account", icon: <SettingsRoundedIcon /> },
+    { text: "Logout", icon: <LogoutIcon /> },
+  ];
+
 
   return (
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: "space-between" }}>
@@ -49,7 +66,9 @@ const MenuContent = () => {
       <List dense>
         {secondaryListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: "block" }}>
-            <ListItemButton>
+            <ListItemButton
+              onClick={() => handleAction(item.text)}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
