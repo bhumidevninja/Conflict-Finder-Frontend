@@ -50,7 +50,7 @@ const CustomizedDataGrid = () => {
         }
         onRowClick={handleRowClick}
         initialState={{
-          pagination: { paginationModel: { pageSize: 20 } },
+          pagination: { paginationModel: { pageSize: 10 } },
         }}
         pageSizeOptions={[10, 20, 50]}
         disableColumnResize
