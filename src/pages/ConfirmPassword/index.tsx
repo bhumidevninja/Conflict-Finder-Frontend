@@ -43,8 +43,6 @@ const ConfirmPassword: React.FC = () => {
 
     if (Object.values(errors).every((error) => error === "")) {
       alert("Password reset successfully!");
-      // console.log("Email:", email);
-      // console.log("Passwords:", passwords);
     }
   };
 

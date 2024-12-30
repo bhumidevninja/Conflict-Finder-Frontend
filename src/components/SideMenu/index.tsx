@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
 import MenuContent from "../MenuContent";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
@@ -21,6 +22,7 @@ const Drawer = styled(MuiDrawer)({
 });
 
 const SideMenu = () => {
+  const { user } = useSelector((state: RootState) => state.auth);
   return (
     <Drawer
       variant="permanent"
@@ -52,10 +54,10 @@ const SideMenu = () => {
             variant="body2"
             sx={{ fontWeight: 500, lineHeight: "16px" }}
           >
-            Riley Carter
+            {user?.name}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            riley@email.com
+            {user?.email}
           </Typography>
         </Box>
       </Stack>

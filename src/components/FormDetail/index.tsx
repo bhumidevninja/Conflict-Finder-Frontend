@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,9 +10,15 @@ import {
   Typography,
   Snackbar,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store";
+import { postProject } from "../../reducers/projectSlice";
 
 const FormDetail: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [projectSuggestion, setProjectSuggestion] = useState<string>('Welcome to the Typewriter Effect in MUI!');
 
   const [formValues, setFormValues] = useState({
     projectTitle: "",
@@ -36,6 +42,23 @@ const FormDetail: React.FC = () => {
       setFormErrors({ ...formErrors, [name]: "" });
     }
   };
+
+  useEffect(() => {
+    let currentIndex = 0;
+
+    let typingSpeed = 100;
+
+    const type = () => {
+      if (currentIndex < projectSuggestion.length) {
+        setProjectSuggestion((prev) => prev + projectSuggestion[currentIndex]);
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    };
+    const typingInterval = setInterval(type, typingSpeed);
+    return () => clearInterval(typingInterval);
+  }, []);
 
 
   const handleClose = (
@@ -78,6 +101,7 @@ const FormDetail: React.FC = () => {
     setOpen(true)
     event.preventDefault();
     if (validateForm()) {
+      dispatch(postProject(formValues));
       setFormValues({
         projectTitle: "",
         projectFrontend: "",
@@ -89,7 +113,7 @@ const FormDetail: React.FC = () => {
 
   return (
     <div>
-      <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
+      <Typography component="h2" variant="h6" gutterBottom>
         Create New Project
       </Typography>
       <Typography variant="subtitle1" color="textSecondary" marginBottom={4}>
@@ -225,7 +249,7 @@ const FormDetail: React.FC = () => {
                     placeholder="Suggestions will appear here if available after submition"
                     multiline
                     rows={16}
-                    value={formValues.projectDetails}
+                    // value={projectSuggestion}
                     onChange={handleInputChange}
                     // error={!!formErrors.projectDetails}
                     // helperText={formErrors.projectDetails}
@@ -244,6 +268,7 @@ const FormDetail: React.FC = () => {
                     backgroundColor: "#000",
                     marginTop: 3,
                   }}
+                  disabled
                 >
                   Generate Suggestion
                 </Button>

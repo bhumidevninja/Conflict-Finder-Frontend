@@ -10,6 +10,8 @@ import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useDispatch } from "react-redux";
+import { logout } from "../../reducers/authSlice";
 
 const mainListItems = [
   { text: "Dashboard", icon: <HomeRoundedIcon />, link: "/dashboard" },
@@ -21,6 +23,7 @@ const mainListItems = [
 
 const MenuContent = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
 
@@ -35,12 +38,13 @@ const MenuContent = () => {
 
     if(text === "Logout"){
       localStorage.clear();
+      dispatch(logout());
       navigate('/login')
     }
   }
 
   const secondaryListItems = [
-    { text: "Account", icon: <SettingsRoundedIcon /> },
+    // { text: "Account", icon: <SettingsRoundedIcon /> },
     { text: "Logout", icon: <LogoutIcon /> },
   ];
 

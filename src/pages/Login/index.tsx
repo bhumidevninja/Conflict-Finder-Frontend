@@ -1,33 +1,53 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from "@mui/material/CssBaseline";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import LoginSVG from "../../components/svg/login";
 import LogoSVG from "../../components/svg/logo";
+import { RootState } from "@reduxjs/toolkit/query";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../store";
+import { fetchUserInfo, loginUser } from "../../reducers/authSlice";
 
 const Login = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
+  const { loading, user, tokens, success } = useSelector((state: RootState) => state.auth);
+
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     if (emailError || passwordError) {
-      event.preventDefault();
       return;
     }
     const data = new FormData(event.currentTarget);
-    console.log({
+    const userData = {
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+    if (userData.email != null && userData.password != null){
+      dispatch(loginUser(userData));
+    }
   };
+
+  useEffect(() => {
+    if (tokens && !user) {
+      dispatch(fetchUserInfo());
+      navigate('/dashboard');
+    }
+  }, [tokens, user, dispatch]);
 
   const validateInputs = () => {
     const email = document.getElementById("email") as HTMLInputElement;
@@ -44,9 +64,9 @@ const Login = () => {
       setEmailErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password.value || password.value.length < 3) {
       setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
+      setPasswordErrorMessage("Password must be at least 3 characters long.");
       isValid = false;
     } else {
       setPasswordError(false);
@@ -182,9 +202,13 @@ const Login = () => {
                   marginTop: 3,
                 }}
               >
+                {loading ? 
+                <LoadingButton loading variant="outlined">
+                  Submit
+                </LoadingButton>:
                 <Typography variant="button" fontWeight="bold">
                   Sign in
-                </Typography>
+                </Typography>}
               </Button>
 
               <div style={{ textAlign: "center" }}>

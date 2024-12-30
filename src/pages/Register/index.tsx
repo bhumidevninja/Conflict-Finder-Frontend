@@ -6,36 +6,62 @@ import FormControl from "@mui/material/FormControl";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import RegisterSVG from "../../components/svg/register";
 import LogoSVG from "../../components/svg/logo";
+import { AppDispatch } from "../../store";
+import { useDispatch } from "react-redux";
+import { createUser } from "../../reducers/authSlice";
+import { registerUserService } from "../../services/users";
+
+
+interface RegisterUser {
+  password: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
 
 const Register = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [fullNameError, setFullNameError] = useState(false);
-  const [fullNameErrorMessage, setFullNameErrorMessage] = useState("");
+  const [firstNameError, setFirstNameError] = useState(false);
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = useState("");
+  const [lastNameError, setLastNameError] = useState(false);
+  const [lastNameErrorMessage, setLastNameErrorMessage] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError || fullNameError) {
-      event.preventDefault();
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (emailError || passwordError || firstNameError || lastNameError) {
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-      fullname: data.get("fullname"),
-    });
+    const user: RegisterUser = {
+      'email': email,
+      'password':password,
+      'first_name':firstName,
+      'last_name': lastName,
+    }
+    const response = await registerUserService(user);
+    if(response){
+      navigate('/login')
+    }
   };
 
   const validateInputs = () => {
     const email = document.getElementById("email") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
-    const fullname = document.getElementById("fullname") as HTMLInputElement;
+    const firstname = document.getElementById("first_name") as HTMLInputElement;
+    const lastname = document.getElementById("last_name") as HTMLInputElement;
 
     let isValid = true;
 
@@ -48,13 +74,22 @@ const Register = () => {
       setEmailErrorMessage("");
     }
 
-    if (fullname.value.length < 3) {
-      setFullNameError(true);
-      setFullNameErrorMessage("Password must be at least 6 characters long.");
+    if (firstname.value.length < 3) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage("Password must be at least 6 characters long.");
       isValid = false;
     } else {
-      setFullNameError(false);
-      setFullNameErrorMessage("");
+      setFirstNameError(false);
+      setFirstNameErrorMessage("");
+    }
+
+    if (lastname.value.length < 3) {
+      setLastNameError(true);
+      setLastNameErrorMessage("Password must be at least 6 characters long.");
+      isValid = false;
+    } else {
+      setLastNameError(false);
+      setLastNameErrorMessage("");
     }
 
     if (!password.value || password.value.length < 6) {
@@ -158,27 +193,48 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
+                  onChange={(e)=>setEmail(e.target.value)}
                   error={Boolean(emailErrorMessage)}
                 />
               </FormControl>
 
               <FormControl>
                 <FormLabel
-                  htmlFor="fullname"
-                  error={Boolean(fullNameErrorMessage)}
+                  htmlFor="first_name"
+                  error={Boolean(firstNameErrorMessage)}
                 >
-                  Full Name
+                  First Name
                 </FormLabel>
                 <TextField
-                  id="fullname"
+                  id="first_name"
                   type="text"
-                  name="fullname"
-                  placeholder="John Doe"
+                  name="first_name"
+                  placeholder="John"
                   required
-                  fullWidth
                   variant="outlined"
                   size="small"
-                  error={Boolean(fullNameErrorMessage)}
+                  onChange={(e)=>setFirstName(e.target.value)}
+                  error={Boolean(firstNameErrorMessage)}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel
+                  htmlFor="last_name"
+                  error={Boolean(lastNameErrorMessage)}
+                >
+                  Last Name
+                </FormLabel>
+                <TextField
+                  id="last_name"
+                  type="text"
+                  name="last_name"
+                  placeholder="Doe"
+                  required
+                  variant="outlined"
+                  size="small"
+                  onChange={(e)=>setLastName(e.target.value)}
+                  error={Boolean(lastNameErrorMessage)}
                 />
               </FormControl>
 
@@ -198,6 +254,7 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
+                  onChange={(e)=>setPassword(e.target.value)}
                   error={Boolean(passwordErrorMessage)}
                 />
               </FormControl>
