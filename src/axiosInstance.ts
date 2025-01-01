@@ -1,5 +1,6 @@
 
 import axios, { AxiosInstance } from 'axios';
+import { redirect } from 'react-router-dom';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -30,6 +31,8 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
+      localStorage.clear();
+      redirect('/login');
       console.error('Unauthorized, please login');
     }
     return Promise.reject(error);

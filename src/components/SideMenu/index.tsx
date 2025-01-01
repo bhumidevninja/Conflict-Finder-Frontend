@@ -7,6 +7,7 @@ import Typography from "@mui/material/Typography";
 
 import MenuContent from "../MenuContent";
 import { useSelector } from "react-redux";
+import { stringAvatar } from "../utils";
 
 const drawerWidth = 240;
 
@@ -22,7 +23,7 @@ const Drawer = styled(MuiDrawer)({
 });
 
 const SideMenu = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: any) => state.auth);
   return (
     <Drawer
       variant="permanent"
@@ -44,17 +45,13 @@ const SideMenu = () => {
           borderColor: "divider",
         }}
       >
-        <Avatar
-          sizes="small"
-          alt="Riley Carter"
-          sx={{ width: 36, height: 36 }}
-        />
+        <Avatar {...stringAvatar(user?.first_name)} />
         <Box sx={{ mr: "auto" }}>
           <Typography
             variant="body2"
             sx={{ fontWeight: 500, lineHeight: "16px" }}
           >
-            {user?.name}
+            {user?.first_name} {user?.last_name}
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
             {user?.email}

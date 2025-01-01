@@ -1,33 +1,50 @@
-import * as React from "react";
+import { useEffect, useState, Fragment } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { columns, rows } from "./gridData";
+import { columns } from "./gridData";
 import {
+  Box,
   Button,
   Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Divider,
+  FormControl,
   Grid,
   IconButton,
+  Input,
   Typography,
 } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../store";
+import { fetchProjectInfo, putProject } from "../../reducers/projectSlice";
 
 type selectedRowType = {
-  Name: string;
-  batchYear: number;
-  projectName: string;
+  id: string;
+  first_name: string;
+  title: string;
   status: string;
+  frontend_tech: string;
+  backend_tech: string;
+  desc: string;
 };
 
 const CustomizedDataGrid = () => {
-  const [openModal, setOpenModal] = React.useState(false);
-  const [selectedRow, setSelectedRow] = React.useState<selectedRowType>({
-    Name: "",
-    batchYear: 2000,
-    projectName: "",
+  const dispatch = useDispatch<AppDispatch>();
+  const [openModal, setOpenModal] = useState(false);
+  const { user } = useSelector((state: any) => state.auth);
+  const { projectList } = useSelector((state: any) => state.project);
+  const [selectedRow, setSelectedRow] = useState<selectedRowType>({
+    id: "",
+    first_name: "",
+    title: "",
     status: "",
+    frontend_tech: "",
+    backend_tech: "",
+    desc: "",
   });
 
   const handleRowClick = (param: any) => {
@@ -39,11 +56,20 @@ const CustomizedDataGrid = () => {
     setOpenModal(false);
   };
 
+  const handleStatus = async (status: string) => {
+    await dispatch(putProject({ id: selectedRow.id, status: status }));
+    setOpenModal(false);
+  };
+
+  useEffect(() => {
+    dispatch(fetchProjectInfo());
+  }, []);
+
   return (
-    <React.Fragment>
+    <Fragment>
       <DataGrid
         autoHeight
-        rows={rows}
+        rows={projectList}
         columns={columns}
         getRowClassName={(params) =>
           params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
@@ -95,48 +121,91 @@ const CustomizedDataGrid = () => {
             <div>
               <Grid container spacing={2}>
                 <Grid item xs={8}>
-                  <Typography>Name: {selectedRow?.Name}</Typography>
+                  <Typography>Name: {selectedRow?.first_name}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography>Batch Year: {selectedRow?.batchYear}</Typography>
-                </Grid>
-                <Grid item xs={8}>
                   <Typography>
-                    Project Name: {selectedRow?.projectName}
+                    Status :{" "}
+                    <Chip
+                      label={selectedRow?.status}
+                      color={
+                        selectedRow?.status == "Approved"
+                          ? "success"
+                          : selectedRow?.status == "Rejected"
+                          ? "error"
+                          : "default"
+                      }
+                      size="small"
+                    />
                   </Typography>
                 </Grid>
-                <Grid item xs={4}>
-                  <Chip
-                    label={selectedRow?.status}
-                    color="success"
-                    size="small"
-                  />
+                <Grid item xs={8}>
+                  <Typography>Project Name: {selectedRow?.title}</Typography>
+                </Grid>
+
+                <Grid item xs={8}>
+                  <Typography>
+                    Frontend: {selectedRow?.frontend_tech}
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <Typography>Backend: {selectedRow?.backend_tech}</Typography>
                 </Grid>
 
                 <Grid item>
-                  <Typography gutterBottom>
-                    Description: Aenean lacinia bibendum nulla sed consectetur.
-                    Praesent commodo cursus magna, vel scelerisque nisl
-                    consectetur et. Donec sed odio dui. Donec ullamcorper nulla
-                    non metus auctor fringilla. Praesent commodo cursus magna,
-                    vel scelerisque nisl consectetur et. Vivamus sagittis lacus
-                    vel augue laoreet rutrum faucibus dolor auctor.
-                  </Typography>
+                  <Typography gutterBottom>{selectedRow?.desc}</Typography>
                 </Grid>
               </Grid>
+
+              {user?.is_superuser ? (
+                <>
+                  <Divider sx={{ marginY: 4, width: 1 }} />
+                  <Grid item>
+                    <Typography
+                      variant="caption"
+                      style={{ fontStyle: "italic" }}
+                    >
+                      Comments
+                    </Typography>
+
+                    <FormControl fullWidth sx={{ m: 1 }} variant="standard">
+                      <Box display="flex" alignItems="center" gap={1}>
+                        <Input
+                          id="standard-adornment-amount"
+                          sx={{ flex: 1 }}
+                        />
+
+                        <IconButton
+                          aria-label="delete"
+                          size="small"
+                          sx={{ whiteSpace: "nowrap" }}
+                        >
+                          <SendIcon
+                            fontSize="inherit"
+                            style={{ color: "black" }}
+                          />
+                        </IconButton>
+                      </Box>
+                    </FormControl>
+                  </Grid>
+                </>
+              ) : null}
             </div>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseModal} color="success">
-            Approved
-          </Button>
-          <Button onClick={handleCloseModal} color="error">
-            Unapproved
-          </Button>
-        </DialogActions>
+        {user?.is_superuser ? (
+          <DialogActions>
+            <Button onClick={() => handleStatus("Approved")} color="success">
+              Approved
+            </Button>
+            <Button onClick={() => handleStatus("Rejected")} color="error">
+              Rejected
+            </Button>
+          </DialogActions>
+        ) : null}
       </Dialog>
-    </React.Fragment>
+
+    </Fragment>
   );
 };
 

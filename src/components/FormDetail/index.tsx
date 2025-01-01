@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   Box,
   Button,
@@ -9,16 +10,35 @@ import {
   Tooltip,
   Typography,
   Snackbar,
+  Divider,
 } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
-import { postProject } from "../../reducers/projectSlice";
+import {
+  clearSuggestion,
+  fetchProjectInfo,
+  getSuggestion,
+  postProject,
+} from "../../reducers/projectSlice";
+import AlertDialog from "../AlertDialog";
+import { LoadingButton } from "@mui/lab";
+import Loader from "../Loader";
+import CenterInstruction from "../CenterInstruction";
 
 const FormDetail: React.FC = () => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  const {
+    loading,
+    success,
+    errorMessage,
+    projectSuggestion,
+    suggestionLoader,
+  } = useSelector((state: any) => state.project);
 
-  const [projectSuggestion, setProjectSuggestion] = useState<string>('Welcome to the Typewriter Effect in MUI!');
+  useEffect(() => {
+    dispatch(clearSuggestion());
+  }, []);
 
   const [formValues, setFormValues] = useState({
     projectTitle: "",
@@ -43,34 +63,12 @@ const FormDetail: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    let currentIndex = 0;
-
-    let typingSpeed = 100;
-
-    const type = () => {
-      if (currentIndex < projectSuggestion.length) {
-        setProjectSuggestion((prev) => prev + projectSuggestion[currentIndex]);
-        currentIndex++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    };
-    const typingInterval = setInterval(type, typingSpeed);
-    return () => clearInterval(typingInterval);
-  }, []);
-
-
-  const handleClose = (
+  const handleClose = () =>
     // event?: React.SyntheticEvent | Event,
     // reason?: SnackbarCloseReason,
-  ) => {
-    // if (reason === 'clickaway') {
-    //   return;
-    // }
-
-    setOpen(false);
-  };
+    {
+      setOpen(false);
+    };
 
   const validateForm = () => {
     const errors: typeof formErrors = {
@@ -97,17 +95,25 @@ const FormDetail: React.FC = () => {
     return Object.values(errors).every((error) => error === "");
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    setOpen(true)
+  const handleSubmit = async (event: React.FormEvent) => {
+    setOpen(true);
     event.preventDefault();
     if (validateForm()) {
-      dispatch(postProject(formValues));
-      setFormValues({
-        projectTitle: "",
-        projectFrontend: "",
-        projectBackend: "",
-        projectDetails: "",
-      });
+      const payload = {
+        frontend_tech: formValues.projectFrontend,
+        backend_tech: formValues.projectBackend,
+        title: formValues.projectTitle,
+        desc: formValues.projectDetails,
+      };
+      await dispatch(postProject(payload));
+      await dispatch(fetchProjectInfo());
+    }
+  };
+
+  const handleSuggestion = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (validateForm()) {
+      dispatch(getSuggestion({ desc: formValues.projectDetails }));
     }
   };
 
@@ -121,11 +127,13 @@ const FormDetail: React.FC = () => {
       </Typography>
       <Box display="flex" justifyContent="space-between" gap={3}>
         <Box flex={1}>
-          <Card elevation={3}>
+          <Card
+            elevation={3}
+            sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
             <CardContent>
               <Box component="form" onSubmit={handleSubmit} padding={2}>
                 <Grid container spacing={4}>
-                  {/* Project Title */}
                   <Grid item xs={12}>
                     <Tooltip
                       title="Enter a descriptive project title"
@@ -141,7 +149,6 @@ const FormDetail: React.FC = () => {
                         error={!!formErrors.projectTitle}
                         helperText={formErrors.projectTitle}
                         size="small"
-                        
                       />
                     </Tooltip>
                   </Grid>
@@ -161,7 +168,6 @@ const FormDetail: React.FC = () => {
                         error={!!formErrors.projectFrontend}
                         helperText={formErrors.projectFrontend}
                         size="small"
-                        
                       />
                     </Tooltip>
                   </Grid>
@@ -181,7 +187,6 @@ const FormDetail: React.FC = () => {
                         error={!!formErrors.projectBackend}
                         helperText={formErrors.projectBackend}
                         size="small"
-                        
                       />
                     </Tooltip>
                   </Grid>
@@ -205,57 +210,85 @@ const FormDetail: React.FC = () => {
                         size="small"
                       />
                     </Tooltip>
+                    {errorMessage && <AlertDialog message={errorMessage} />}
                   </Grid>
 
-                  {/* Submit Button */}
                   <Grid item xs={12} textAlign="right">
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      size="small"
-                      sx={{
-                        textTransform: "capitalize",
-                        paddingX: 5,
-                        backgroundColor: "#000",
-                      }}
-                    >
-                      Submit
-                    </Button>
+                    {loading ? (
+                      <LoadingButton
+                        variant="contained"
+                        size="small"
+                        loading
+                        sx={{
+                          textTransform: "capitalize",
+                          paddingX: 5,
+                          backgroundColor: "#000",
+                        }}
+                      >
+                        Loading...
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        size="small"
+                        sx={{
+                          textTransform: "capitalize",
+                          paddingX: 5,
+                          backgroundColor: "#000",
+                        }}
+                      >
+                        Submit
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Box>
             </CardContent>
           </Card>
-          <Snackbar
-            open={open}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            autoHideDuration={5000}
-            onClose={handleClose}
-            message="Your details have been submitted successfully."
-          />
+          {success ? (
+            <Snackbar
+              open={open}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={5000}
+              onClose={handleClose}
+              message="Your details have been submitted successfully."
+            />
+          ) : null}
         </Box>
 
-        <Box flex={1}>
+        <Box flex={1} component="form" onSubmit={handleSuggestion}>
           <Card>
-            <CardContent>
-              <Grid xs={12}>
-                <Tooltip
-                  title="Once your project get submitted you will get more suggestion..."
-                  placement="right"
-                >
-                  <TextField
-                    fullWidth
-                    name="projectDetails"
-                    placeholder="Suggestions will appear here if available after submition"
-                    multiline
-                    rows={16}
-                    // value={projectSuggestion}
-                    onChange={handleInputChange}
-                    // error={!!formErrors.projectDetails}
-                    // helperText={formErrors.projectDetails}
-                    size="small"
-                  />
-                </Tooltip>
+            <CardContent
+              sx={{ height: "100%", display: "flex", flexDirection: "column" }}
+            >
+              <Grid xs={12} paddingX={4}>
+                {suggestionLoader ? (
+                  <Loader />
+                ) : projectSuggestion ? (
+                  <>
+                    <Typography
+                      fontWeight="bold"
+                      component="h2"
+                      variant="h6"
+                      gutterBottom
+                    >
+                      AI Generated Suggestion
+                    </Typography>
+                    <Divider sx={{ marginY: 2 }} />
+                    <Typography
+                      sx={{
+                        height: "600px",
+                        overflowY: "scroll",
+                        scrollbarWidth: "none",
+                      }}
+                    >
+                      <ReactMarkdown>{projectSuggestion}</ReactMarkdown>
+                    </Typography>
+                  </>
+                ) : (
+                  <CenterInstruction />
+                )}
               </Grid>
               <Grid item xs={12} textAlign="right">
                 <Button
@@ -268,7 +301,6 @@ const FormDetail: React.FC = () => {
                     backgroundColor: "#000",
                     marginTop: 3,
                   }}
-                  disabled
                 >
                   Generate Suggestion
                 </Button>

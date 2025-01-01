@@ -6,18 +6,22 @@ interface Tokens {
   refreshToken: string;
 }
 
-interface User {
+export interface User {
   id: number;
-  name: string;
-  email: string;
-}
-
-interface RegisterUser {
-  password: string;
-  email: string;
   first_name: string;
   last_name: string;
+  email: string;
+  profile: string;
+  is_active: boolean;
+  is_superuser: boolean;
 }
+
+// interface RegisterUser {
+//   password: string;
+//   email: string;
+//   first_name: string;
+//   last_name: string;
+// }
 
 interface AuthState {
   user: User | null;
@@ -105,7 +109,7 @@ const authSlice = createSlice({
       })
       .addCase(
         loginUser.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
+        (state) => {
           state.loading = false;
           state.success = false;
         }
@@ -123,7 +127,7 @@ const authSlice = createSlice({
       )
       .addCase(
         fetchUserInfo.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
+        (state) => {
           state.loading = false;
         }
       )

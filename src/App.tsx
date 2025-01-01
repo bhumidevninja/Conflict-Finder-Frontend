@@ -5,13 +5,12 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import MainGrid from "./components/MainGrid";
 import FormDetail from "./components/FormDetail";
-import Layout, { PublicLayout } from "./components/Layout";
+import Layout from "./components/Layout";
 import ResetPasswordForm from "./pages/ResetPasswod";
 import ConfirmPassword from "./pages/ConfirmPassword";
 import { fetchUserInfo } from "./reducers/authSlice";
 import { AppDispatch } from "./store";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@reduxjs/toolkit/query";
 
 // import PrivateRoute from "./routes/PrivateRoute";
 // import PublicRoute from "./routes/PublicRoute";
@@ -33,7 +32,7 @@ const PublicRoute = ({ children }:{children:any}) => {
 function App() {
 
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: any) => state.auth);
   if(localStorage.getItem('accessToken')!==null && user?.email == null){
     dispatch(fetchUserInfo());
   }

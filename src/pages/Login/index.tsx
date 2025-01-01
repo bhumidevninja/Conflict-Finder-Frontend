@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import LoadingButton from '@mui/lab/LoadingButton';
 import CssBaseline from "@mui/material/CssBaseline";
 import FormLabel from "@mui/material/FormLabel";
 import FormControl from "@mui/material/FormControl";
@@ -11,10 +10,10 @@ import Typography from "@mui/material/Typography";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import LoginSVG from "../../components/svg/login";
 import LogoSVG from "../../components/svg/logo";
-import { RootState } from "@reduxjs/toolkit/query";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { fetchUserInfo, loginUser } from "../../reducers/authSlice";
+import { CircularProgress } from "@mui/material";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -24,7 +23,7 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
-  const { loading, user, tokens, success } = useSelector((state: RootState) => state.auth);
+  const { loading, user, tokens } = useSelector((state:any) => state.auth);
 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -203,9 +202,7 @@ const Login = () => {
                 }}
               >
                 {loading ? 
-                <LoadingButton loading variant="outlined">
-                  Submit
-                </LoadingButton>:
+                <CircularProgress size="30px" style={{color:'white'}}/>:
                 <Typography variant="button" fontWeight="bold">
                   Sign in
                 </Typography>}

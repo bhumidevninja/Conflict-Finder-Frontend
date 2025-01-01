@@ -8,7 +8,6 @@ import { Link, useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
 import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useDispatch } from "react-redux";
 import { logout } from "../../reducers/authSlice";
@@ -44,7 +43,6 @@ const MenuContent = () => {
   }
 
   const secondaryListItems = [
-    // { text: "Account", icon: <SettingsRoundedIcon /> },
     { text: "Logout", icon: <LogoutIcon /> },
   ];
 

@@ -1,21 +1,29 @@
 import Chip from "@mui/material/Chip";
-import { GridRowsProp, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
-function renderStatus(status: "Approved" | "Pending" | "UnApproved") {
+function renderStatus(status: "Approved" | "Pending" | "Rejected") {
   const colors: { [index: string]: "success" | "default" | "error" } = {
     Approved: "success",
     Pending: "default",
-    UnApproved: "error",
+    Rejected: "error",
   };
 
   return <Chip label={status} color={colors[status]} size="small" />;
 }
 
+const renderCommentCount = (count:number = 2) => {
+  return (<div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+      <ChatBubbleOutlineIcon fontSize="small" />
+      <span>{count}</span>
+  </div>)
+}
+
 
 export const columns: GridColDef[] = [
-  { field: "Name", headerName: "Name", flex: 1.5, minWidth: 100 },
+  { field: "first_name", headerName: "Name", flex: 1.5, minWidth: 100 },
   {
-    field: "projectName",
+    field: "title",
     headerName: "Project Name",
     headerAlign: "left",
     align: "left",
@@ -30,210 +38,28 @@ export const columns: GridColDef[] = [
     renderCell: (params) => renderStatus(params.value as any),
   },
   {
-    field: "appliedDate",
-    headerName: "Applied Date",
+    field: "frontend_tech",
+    headerName: "Frontend",
     headerAlign: "right",
     align: "right",
     flex: 1,
     minWidth: 100,
   },
   {
-    field: "approvedDate",
-    headerName: "Approved Date",
+    field: "backend_tech",
+    headerName: "Backend",
     headerAlign: "right",
     align: "right",
     flex: 1,
     minWidth: 120,
   },
   {
-    field: "batchYear",
-    headerName: "Batch",
+    field: "",
+    headerName: "Comments",
     headerAlign: "right",
     align: "right",
     flex: 1,
-    minWidth: 100,
-  },
-];
-
-export const rows: GridRowsProp = [
-  {
-    id: 1,
-    Name: "Amit Sharma",
-    status: "Approved",
-    projectName: "AI-Powered Chatbot",
-    appliedDate: "08/15/2015",
-    approvedDate: "10/10/2015",
-    batchYear: 2015,
-  },
-  {
-    id: 2,
-    Name: "Rohit Kumar",
-    status: "Approved",
-    projectName: "E-Learning Platform",
-    appliedDate: "07/20/2016",
-    approvedDate: "09/05/2016",
-    batchYear: 2016,
-  },
-  {
-    id: 3,
-    Name: "Priya Nair",
-    status: "UnApproved",
-    projectName: "Blockchain-Based Voting System",
-    appliedDate: "05/10/2017",
-    approvedDate: "06/15/2017",
-    batchYear: 2017,
-  },
-  {
-    id: 4,
-    Name: "Sneha Gupta",
-    status: "Approved",
-    projectName: "Inventory Management System",
-    appliedDate: "06/18/2018",
-    approvedDate: "08/25/2018",
-    batchYear: 2018,
-  },
-  {
-    id: 5,
-    Name: "Arjun Menon",
-    status: "Pending",
-    projectName: "Real-Time Weather App",
-    appliedDate: "10/30/2019",
-    approvedDate: "11/15/2019",
-    batchYear: 2019,
-  },
-  {
-    id: 6,
-    Name: "Ritu Singh",
-    status: "Approved",
-    projectName: "IoT Smart Home System",
-    appliedDate: "12/01/2020",
-    approvedDate: "12/12/2020",
-    batchYear: 2020,
-  },
-  {
-    id: 7,
-    Name: "Vikram Joshi",
-    status: "Pending",
-    projectName: "Online Food Delivery System",
-    appliedDate: "01/05/2021",
-    approvedDate: "02/10/2021",
-    batchYear: 2021,
-  },
-  {
-    id: 8,
-    Name: "Meera Iyer",
-    status: "Approved",
-    projectName: "Healthcare Management System",
-    appliedDate: "03/01/2022",
-    approvedDate: "04/05/2022",
-    batchYear: 2022,
-  },
-  {
-    id: 9,
-    Name: "Karthik Reddy",
-    status: "Pending",
-    projectName: "Mobile Expense Tracker App",
-    appliedDate: "05/12/2023",
-    approvedDate: "06/20/2023",
-    batchYear: 2023,
-  },
-  {
-    id: 10,
-    Name: "Neha Patel",
-    status: "Approved",
-    projectName: "Travel Booking System",
-    appliedDate: "07/19/2024",
-    approvedDate: "08/15/2024",
-    batchYear: 2024,
-  },
-  {
-    id: 11,
-    Name: "Siddharth Jain",
-    status: "Approved",
-    projectName: "Personal Finance Dashboard",
-    appliedDate: "09/10/2025",
-    approvedDate: "10/25/2025",
-    batchYear: 2025,
-  },
-  {
-    id: 12,
-    Name: "Deepak Yadav",
-    status: "Pending",
-    projectName: "Virtual Reality Gaming App",
-    appliedDate: "11/01/2026",
-    approvedDate: "12/08/2026",
-    batchYear: 2026,
-  },
-  {
-    id: 13,
-    Name: "Anjali Verma",
-    status: "Approved",
-    projectName: "Cybersecurity Threat Detector",
-    appliedDate: "01/15/2027",
-    approvedDate: "02/28/2027",
-    batchYear: 2027,
-  },
-  {
-    id: 14,
-    Name: "Rajesh Pillai",
-    status: "UnApproved",
-    projectName: "Social Media Management Tool",
-    appliedDate: "03/18/2028",
-    approvedDate: "04/30/2028",
-    batchYear: 2028,
-  },
-  {
-    id: 15,
-    Name: "Pooja Chawla",
-    status: "Approved",
-    projectName: "Language Translation App",
-    appliedDate: "05/22/2029",
-    approvedDate: "06/30/2029",
-    batchYear: 2029,
-  },
-  {
-    id: 16,
-    Name: "Manish Tiwari",
-    status: "Pending",
-    projectName: "Crowdsourced Fundraising Platform",
-    appliedDate: "07/05/2030",
-    approvedDate: "08/20/2030",
-    batchYear: 2030,
-  },
-  {
-    id: 17,
-    Name: "Shreya Das",
-    status: "Approved",
-    projectName: "Employee Attendance Tracker",
-    appliedDate: "09/12/2031",
-    approvedDate: "10/15/2031",
-    batchYear: 2031,
-  },
-  {
-    id: 18,
-    Name: "Nitin Bansal",
-    status: "Approved",
-    projectName: "Digital Library Management System",
-    appliedDate: "11/02/2032",
-    approvedDate: "12/05/2032",
-    batchYear: 2032,
-  },
-  {
-    id: 19,
-    Name: "Isha Malhotra",
-    status: "UnApproved",
-    projectName: "Customer Feedback Analyzer",
-    appliedDate: "01/25/2033",
-    approvedDate: "02/22/2033",
-    batchYear: 2033,
-  },
-  {
-    id: 20,
-    Name: "Kabir Singh",
-    status: "Pending",
-    projectName: "AI-Based Resume Screener",
-    appliedDate: "03/30/2034",
-    approvedDate: "04/15/2034",
-    batchYear: 2034,
+    minWidth: 120,
+    renderCell: (params) => renderCommentCount(params.value as any)
   },
 ];

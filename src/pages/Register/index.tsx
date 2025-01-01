@@ -10,9 +10,6 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import RegisterSVG from "../../components/svg/register";
 import LogoSVG from "../../components/svg/logo";
-import { AppDispatch } from "../../store";
-import { useDispatch } from "react-redux";
-import { createUser } from "../../reducers/authSlice";
 import { registerUserService } from "../../services/users";
 
 
@@ -24,7 +21,6 @@ interface RegisterUser {
 }
 
 const Register = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
