@@ -30,10 +30,10 @@ const FormDetail: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {
     loading,
-    success,
     errorMessage,
     projectSuggestion,
     suggestionLoader,
+    postProjectState,
   } = useSelector((state: any) => state.project);
 
   useEffect(() => {
@@ -246,7 +246,7 @@ const FormDetail: React.FC = () => {
               </Box>
             </CardContent>
           </Card>
-          {success ? (
+          {postProjectState.success ? (
             <Snackbar
               open={open}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

@@ -13,17 +13,19 @@ import LogoSVG from "../../components/svg/logo";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../store";
 import { fetchUserInfo, loginUser } from "../../reducers/authSlice";
-import { CircularProgress } from "@mui/material";
+import { Alert, CircularProgress } from "@mui/material";
 
 const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
 
-  const { loading, user, tokens } = useSelector((state:any) => state.auth);
+  const { loading, user, tokens, errorMessage } = useSelector((state:any) => state.auth);
 
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,10 +33,9 @@ const Login = () => {
     if (emailError || passwordError) {
       return;
     }
-    const data = new FormData(event.currentTarget);
     const userData = {
-      email: data.get("email"),
-      password: data.get("password"),
+      email: email,
+      password: password,
     };
     if (userData.email != null && userData.password != null){
       dispatch(loginUser(userData));
@@ -133,6 +134,11 @@ const Login = () => {
             >
               Welcome Back
             </Typography>
+            {errorMessage?
+              <Box sx={{paddingY:2}}>
+                <Alert severity="error">{errorMessage}</Alert>
+              </Box>:null
+            }
             <Box
               component="form"
               onSubmit={handleSubmit}
@@ -154,6 +160,7 @@ const Login = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
+                  onChange={(event)=>setEmail(event?.target.value)}
                   error={emailErrorMessage? true:false}
                   helperText={emailErrorMessage}
                 />
@@ -170,6 +177,7 @@ const Login = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
+                  onChange={(event)=>setPassword(event?.target.value)}
                   error={passwordErrorMessage? true:false}
                   helperText={passwordErrorMessage}
                 />

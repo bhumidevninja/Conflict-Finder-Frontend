@@ -20,6 +20,7 @@ interface ProjectDetail {
   projectSuggestion: string;
   suggestionLoader: boolean;
   projectList: IprojectDetail[];
+  postProjectState: IPostProject,
 }
 
 interface IProjectDetailsForm {
@@ -38,6 +39,12 @@ interface IProjectSuggestion {
   desc: string;
 }
 
+interface IPostProject {
+  loading: boolean;
+  success: boolean;
+  errorMsg: string
+}
+
 const initialState: ProjectDetail = {
   loading: false,
   success: false,
@@ -45,6 +52,11 @@ const initialState: ProjectDetail = {
   projectSuggestion: "",
   projectList: [],
   suggestionLoader: false,
+  postProjectState: {
+    loading: false,
+    success: false,
+    errorMsg: ''
+  },
 };
 
 export const postProject = createAsyncThunk<
@@ -131,14 +143,18 @@ const projectSlice = createSlice({
     builder
       .addCase(postProject.pending, (state) => {
         state.loading = true;
+        state.postProjectState.loading = true;
       })
       .addCase(postProject.fulfilled, (state) => {
         state.loading = false;
         state.success = true;
+        state.postProjectState.loading = false;
+        state.postProjectState.success = true;
       })
       .addCase(postProject.rejected, (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.success = false;
+        state.postProjectState.success = false;
         if (action.payload.title) {
           state.errorMessage = `A project with the same title already exists. Please choose a different title.`;
         } else {

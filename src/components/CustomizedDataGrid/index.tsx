@@ -195,10 +195,22 @@ const CustomizedDataGrid = () => {
         </DialogContent>
         {user?.is_superuser ? (
           <DialogActions>
-            <Button onClick={() => handleStatus("Approved")} color="success">
+            <Button onClick={() => handleStatus("Approved")} color="success"
+              variant="contained"
+              sx={{
+                textTransform: "capitalize",
+                backgroundColor: "success",
+              }}  
+            >
               Approved
             </Button>
-            <Button onClick={() => handleStatus("Rejected")} color="error">
+            <Button onClick={() => handleStatus("Rejected")} color="error"
+              variant="contained"
+              sx={{
+                textTransform: "capitalize",
+                backgroundColor: "error",
+              }}    
+            >
               Rejected
             </Button>
           </DialogActions>

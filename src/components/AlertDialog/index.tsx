@@ -8,6 +8,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store';
 import { clearMessage } from '../../reducers/projectSlice';
+import { IconButton, Typography } from '@mui/material';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
 
 const AlertDialog = ({message}: {message:string}) => {
   const [open, setOpen] = React.useState(!!message);
@@ -27,15 +29,26 @@ const AlertDialog = ({message}: {message:string}) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Alert"}
+        <IconButton>
+            <NewReleasesIcon color='error'/>
+        </IconButton>
+        Alert
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {message}
+          <DialogContentText id="alert-dialog-description" sx={{paddingX:2}}>
+            <Typography variant='body1'>{message}</Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} autoFocus>
+          <Button 
+            variant="contained"
+            size="small"
+            sx={{
+              textTransform: "capitalize",
+              paddingX: 5,
+              backgroundColor: "#000",
+              marginTop: 3,
+            }} onClick={handleClose} autoFocus>
             Close
           </Button>
         </DialogActions>

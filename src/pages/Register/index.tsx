@@ -10,8 +10,13 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 
 import RegisterSVG from "../../components/svg/register";
 import LogoSVG from "../../components/svg/logo";
-import { registerUserService } from "../../services/users";
-
+import { Alert } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "../../store";
+import {
+  clearRegisterErrorMessage,
+  registerUserThunk,
+} from "../../reducers/authSlice";
 
 interface RegisterUser {
   password: string;
@@ -22,6 +27,9 @@ interface RegisterUser {
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  const { registerState } = useSelector((state: any) => state.auth);
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
@@ -36,20 +44,20 @@ const Register = () => {
   const [lastNameError, setLastNameError] = useState(false);
   const [lastNameErrorMessage, setLastNameErrorMessage] = useState("");
 
-  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (emailError || passwordError || firstNameError || lastNameError) {
       return;
     }
     const user: RegisterUser = {
-      'email': email,
-      'password':password,
-      'first_name':firstName,
-      'last_name': lastName,
-    }
-    const response = await registerUserService(user);
-    if(response){
-      navigate('/login')
+      email: email,
+      password: password,
+      first_name: firstName,
+      last_name: lastName,
+    };
+    await dispatch(registerUserThunk(user));
+    if (registerState.success) {
+      navigate("/login");
     }
   };
 
@@ -88,9 +96,9 @@ const Register = () => {
       setLastNameErrorMessage("");
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password.value || password.value.length < 8) {
       setPasswordError(true);
-      setPasswordErrorMessage("Password must be at least 6 characters long.");
+      setPasswordErrorMessage("Password must be at least 8 characters long.");
       isValid = false;
     } else {
       setPasswordError(false);
@@ -161,11 +169,16 @@ const Register = () => {
               sx={{
                 marginBottom: "1rem",
                 fontSize: "clamp(2rem, 10vw, 2.15rem)",
-                textAlign: "center"
+                textAlign: "center",
               }}
             >
               Sign up
             </Typography>
+            {registerState.errorMessage ? (
+              <Box sx={{ paddingY: 2 }}>
+                <Alert severity="error">{registerState.errorMessage}</Alert>
+              </Box>
+            ) : null}
             <Box
               component="form"
               onSubmit={handleSubmit}
@@ -175,6 +188,7 @@ const Register = () => {
                 flexDirection: "column",
                 gap: 2,
               }}
+              onFocus={() => dispatch(clearRegisterErrorMessage())}
             >
               <FormControl>
                 <FormLabel htmlFor="email" error={Boolean(emailErrorMessage)}>
@@ -189,8 +203,9 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  onChange={(e)=>setEmail(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                   error={Boolean(emailErrorMessage)}
+                  helperText={emailErrorMessage}
                 />
               </FormControl>
 
@@ -209,8 +224,9 @@ const Register = () => {
                   required
                   variant="outlined"
                   size="small"
-                  onChange={(e)=>setFirstName(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)}
                   error={Boolean(firstNameErrorMessage)}
+                  helperText={firstNameErrorMessage}
                 />
               </FormControl>
 
@@ -229,8 +245,9 @@ const Register = () => {
                   required
                   variant="outlined"
                   size="small"
-                  onChange={(e)=>setLastName(e.target.value)}
+                  onChange={(e) => setLastName(e.target.value)}
                   error={Boolean(lastNameErrorMessage)}
+                  helperText={lastNameErrorMessage}
                 />
               </FormControl>
 
@@ -250,8 +267,9 @@ const Register = () => {
                   fullWidth
                   variant="outlined"
                   size="small"
-                  onChange={(e)=>setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   error={Boolean(passwordErrorMessage)}
+                  helperText={passwordErrorMessage}
                 />
               </FormControl>
 
@@ -271,7 +289,7 @@ const Register = () => {
                 </Typography>
               </Button>
               <div style={{ textAlign: "center" }}>
-                Already having account?{" "}
+                <Typography>Already having account?{" "}
                 <Link
                   component={RouterLink}
                   to="/login"
@@ -283,6 +301,7 @@ const Register = () => {
                 >
                   Click here
                 </Link>
+                </Typography>
               </div>
             </Box>
           </Box>
